@@ -20,11 +20,10 @@ with open("collection_bibliotheque.csv", newline="") as collection_bilbio :
     nb_book = 1
     next(reader)
     for row in reader :
-        bibliotheque[f"livre{nb_book}"] = {
+        bibliotheque[row[3]] = {
             "titre": row[0],
             "auteur": row[1],
-            "date_publication": row[2],
-            "cote_rangement": row[3]
+            "date_publication": row[2]
         }
         array_cote.append(row[3])
         nb_book += 1
@@ -42,14 +41,15 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
     next(reader)
     for row in reader :
         if row[3] not in array_cote:
-            bibliotheque[f"livre{nb_book}"] = {
+            bibliotheque[row[3]] = {
             "titre": row[0],
             "auteur": row[1],
-            "date_publication": row[2],
-            "cote_rangement": row[3]
+            "date_publication": row[2]
             }
-            print(f" Le livre {bibliotheque[f"livre{nb_book}"]["cote_rangement"]} ---- {bibliotheque[f"livre{nb_book}"]["titre"]} par {bibliotheque[f"livre{nb_book}"]["auteur"]} ---- a été ajouté avec succès")
+            print(f" Le livre {row[3]} ---- {bibliotheque[row[3]]["titre"]} par {bibliotheque[row[3]]["auteur"]} ---- a été ajouté avec succès")
             nb_book += 1
+        else: 
+            print(f" Le livre {row[3]} ---- {bibliotheque[row[3]]["titre"]} par {bibliotheque[row[3]]["auteur"]} ---- est déjà présent dans la bibliothèque")
 
 
 ########################################################################################################## 
@@ -57,9 +57,10 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-    for key, info in bibliotheque.items():
-         if info["cote_rangement"][0] == "S":
-            info["cote_rangement"] = "WS" + info["cote_rangement"][1:]
+    for index in range(len(bibliotheque)):
+        if str.lower(list(bibliotheque)[index][0]) == 's':
+            new_key = 'WS' + list(bibliotheque)[index][1:]
+            bibliotheque[new_key] = bibliotheque.pop(list(bibliotheque)[index])
 
     print(f'\n Bibliotheque avec modifications de cote : {bibliotheque} \n')
 
@@ -73,10 +74,10 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
 # TODO : Écrire votre code ici
 
 
-
-
-
-
+with open("emprunts.csv", newline="") as emprunts :
+    reader = csv.reader(emprunts, delimiter=",", quotechar='|')
+    next(reader)
+    
 
 ########################################################################################################## 
 # PARTIE 5 : Livres en retard 
