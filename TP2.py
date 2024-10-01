@@ -27,7 +27,7 @@ with open("collection_bibliotheque.csv", newline="") as collection_bilbio :
             "date_publication": row[2]
         }
 
-    print(f'\n Bibliotheque initiale : {bibliotheque} \n')
+    print(f'\n Bibliotheque initiale : \n\n{bibliotheque} \n\n')
 
 ########################################################################################################## 
 # PARTIE 2 : Ajout d'une nouvelle collection à la bibliothèque
@@ -66,7 +66,7 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
         bibliotheque[new_key] = bibliotheque.pop(livre[0])
 
 
-    print(f'\n Bibliotheque avec modifications de cote : {bibliotheque} \n')
+    print(f'\n Bibliotheque avec modifications de cote : \n\n{bibliotheque} \n')
 
 
 ########################################################################################################## 
@@ -87,7 +87,7 @@ with open("emprunts.csv", newline="") as emprunts :
         bibliotheque[item[0]]['emprunts'] = 'emprunté'
         bibliotheque[item[0]]['date_emprunt'] = item[1]
     
-    print(f' \n Bibliotheque avec ajout des emprunts : {bibliotheque} \n')
+    print(f' \nBibliotheque avec ajout des emprunts : \n\n{bibliotheque} \n')
     
         
     
@@ -100,17 +100,18 @@ with open("emprunts.csv", newline="") as emprunts :
 
 delai_retour = 30
 delai_perdu = 365
-
+print('\nLivres en retard avec frais: \n')
 for key, value in bibliotheque.items():
     if value['emprunts'] == 'emprunté':
         delai = (date.today() - date.fromisoformat(value['date_emprunt'])).days
         
         if (delai > delai_retour):
             montant = (delai - delai_retour) * 2
-            value['frais_retard'] = 100 if montant >= 100 else montant
+            value['frais_retard'] = "100 $" if montant >= 100 else str(montant) + " $"
             
         if(delai >= delai_perdu):
             value['livres_perdus'] = True
+        
+        print(value)
             
-print(f' \n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n')
-
+print(f'\n\n \nBibliotheque avec ajout des retards et frais :\n\n{bibliotheque} \n')
