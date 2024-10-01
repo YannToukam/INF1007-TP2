@@ -1,4 +1,7 @@
 import csv
+from datetime import date
+import json
+
 """
 TP2 : Système de gestion de livres pour une bibliothèque
 
@@ -14,10 +17,8 @@ Noms et matricules : Nom1 (Yann Toukam), Nom2 (Matricule2)
 # TODO : Écrire votre code ici
 
 with open("collection_bibliotheque.csv", newline="") as collection_bilbio :
-    reader = csv.reader(collection_bilbio, delimiter=",", quotechar='|')
+    reader = csv.reader(collection_bilbio)
     bibliotheque = {}
-    array_cote = []
-    nb_book = 1
     next(reader)
     for row in reader :
         bibliotheque[row[3]] = {
@@ -25,9 +26,6 @@ with open("collection_bibliotheque.csv", newline="") as collection_bilbio :
             "auteur": row[1],
             "date_publication": row[2]
         }
-        array_cote.append(row[3])
-        nb_book += 1
-
 
     print(f'\n Bibliotheque initiale : {bibliotheque} \n')
 
@@ -37,17 +35,16 @@ with open("collection_bibliotheque.csv", newline="") as collection_bilbio :
 
 # TODO : Écrire votre code ici
 with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
-    reader = csv.reader(nouvelle_collection, delimiter=",", quotechar='|')
+    reader = csv.reader(nouvelle_collection)
     next(reader)
     for row in reader :
-        if row[3] not in array_cote:
+        if row[3] not in bibliotheque:
             bibliotheque[row[3]] = {
             "titre": row[0],
             "auteur": row[1],
             "date_publication": row[2]
             }
             print(f" Le livre {row[3]} ---- {bibliotheque[row[3]]["titre"]} par {bibliotheque[row[3]]["auteur"]} ---- a été ajouté avec succès")
-            nb_book += 1
         else: 
             print(f" Le livre {row[3]} ---- {bibliotheque[row[3]]["titre"]} par {bibliotheque[row[3]]["auteur"]} ---- est déjà présent dans la bibliothèque")
 
@@ -57,14 +54,19 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-    for index in range(len(bibliotheque)):
-        if str.lower(list(bibliotheque)[index][0]) == 's':
+    '''
+    for key, value in bibliotheque.items():
+        if value['auteur'] == 'William Shakespeare':
             new_key = 'WS' + list(bibliotheque)[index][1:]
-            bibliotheque[new_key] = bibliotheque.pop(list(bibliotheque)[index])
+            bibliotheque[new_key] = bibliotheque.pop(key)
+    '''
+
+    for livre in [livre for livre in bibliotheque.items() if livre[1]['auteur'] == 'William Shakespeare']:
+        new_key = 'WS' + livre[0][1:]
+        bibliotheque[new_key] = bibliotheque.pop(livre[0])
+
 
     print(f'\n Bibliotheque avec modifications de cote : {bibliotheque} \n')
-
-
 
 
 ########################################################################################################## 
@@ -73,10 +75,21 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
 
 # TODO : Écrire votre code ici
 
-
 with open("emprunts.csv", newline="") as emprunts :
-    reader = csv.reader(emprunts, delimiter=",", quotechar='|')
+    reader = csv.reader(emprunts)
     next(reader)
+
+    for key, value in bibliotheque.items():
+        value['emprunts'] = 'disponible'
+        
+    
+    for item in reader:
+        bibliotheque[item[0]]['emprunts'] = 'emprunté'
+        bibliotheque[item[0]]['date_emprunt'] = item[1]
+    
+    print(f' \n Bibliotheque avec ajout des emprunts : {bibliotheque} \n')
+    
+        
     
 
 ########################################################################################################## 
@@ -85,8 +98,19 @@ with open("emprunts.csv", newline="") as emprunts :
 
 # TODO : Écrire votre code ici
 
+delai_retour = 30
+delai_perdu = 365
 
-
-
-
+for key, value in bibliotheque.items():
+    if value['emprunts'] == 'emprunté':
+        delai = (date.today() - date.fromisoformat(value['date_emprunt'])).days
+        
+        if (delai > delai_retour):
+            montant = (delai - delai_retour) * 2
+            value['frais_retard'] = 100 if montant >= 100 else montant
+            
+        if(delai >= delai_perdu):
+            value['livres_perdus'] = True
+            
+print(f' \n Bibliotheque avec ajout des retards et frais : {bibliotheque} \n')
 
