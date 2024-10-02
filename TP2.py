@@ -54,13 +54,6 @@ with open("nouvelle_collection.csv", newline="") as nouvelle_collection :
 ########################################################################################################## 
 
 # TODO : Écrire votre code ici
-    '''
-    for key, value in bibliotheque.items():
-        if value['auteur'] == 'William Shakespeare':
-            new_key = 'WS' + list(bibliotheque)[index][1:]
-            bibliotheque[new_key] = bibliotheque.pop(key)
-    '''
-
     for livre in [livre for livre in bibliotheque.items() if livre[1]['auteur'] == 'William Shakespeare']:
         new_key = 'WS' + livre[0][1:]
         bibliotheque[new_key] = bibliotheque.pop(livre[0])
@@ -81,6 +74,7 @@ with open("emprunts.csv", newline="") as emprunts :
 
     for key, value in bibliotheque.items():
         value['emprunts'] = 'disponible'
+        value['date_emprunt'] = ''
         
     
     for item in reader:
@@ -101,7 +95,10 @@ with open("emprunts.csv", newline="") as emprunts :
 delai_retour = 30
 delai_perdu = 365
 print('\nLivres en retard avec frais: \n')
-for key, value in bibliotheque.items():
+for key, value in bibliotheque.items():    
+    value['frais_retard'] = None
+    value['livres_perdus'] = False
+    
     if value['emprunts'] == 'emprunté':
         delai = (date.today() - date.fromisoformat(value['date_emprunt'])).days
         
@@ -113,5 +110,6 @@ for key, value in bibliotheque.items():
             value['livres_perdus'] = True
         
         print(value)
+        
             
 print(f'\n\n \nBibliotheque avec ajout des retards et frais :\n\n{bibliotheque} \n')
