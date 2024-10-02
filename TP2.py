@@ -5,9 +5,9 @@ import json
 """
 TP2 : Système de gestion de livres pour une bibliothèque
 
-Groupe de laboratoire : XX
-Numéro d'équipe :  YY
-Noms et matricules : Nom1 (Yann Toukam), Nom2 (Matricule2)
+Groupe de laboratoire : L05-13
+Numéro d'équipe :  13
+Noms et matricules : Nom1 (Yann Toukam), Nom2 (Florian Tami) 2272713
 """
 
 ########################################################################################################## 
